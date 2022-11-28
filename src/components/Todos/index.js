@@ -1,5 +1,4 @@
-import { useState } from "react";
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import Form from "./form";
 import Todo from "./todo";
 import Footer from "./footer";
@@ -23,9 +22,43 @@ function Todos() {
     },
   ]);
 
+  const [status, setStatus] = useState("");
+  const [filteredTodos, setFilteredTodos] = useState([]);
+
   useEffect(() => {
-    console.log(todos);
-  }, [todos]);
+    getLocalTodos();
+  }, []);
+
+  useEffect(() => {
+    const filterHandler = () => {
+      switch (status) {
+        case "completed":
+          setFilteredTodos(todos.filter((todo) => todo.completed === true));
+          break;
+        case "active":
+          setFilteredTodos(todos.filter((todo) => todo.completed === false));
+          break;
+        default:
+          setFilteredTodos(todos);
+          break;
+      }
+    };
+    filterHandler();
+    saveLocalTodos();
+  }, [todos, status]);
+
+  // Local Storage
+  const saveLocalTodos = () => {
+    localStorage.setItem("todos", JSON.stringify(todos));
+  };
+
+  const getLocalTodos = () => {
+    if (localStorage.getItem("todos") === null) {
+      localStorage.setItem("todos", JSON.stringify([]));
+    } else {
+      setTodos(JSON.parse(localStorage.getItem("todos")));
+    }
+  };
 
   return (
     <section className="todoapp">
@@ -38,13 +71,18 @@ function Todos() {
         <input className="toggle-all" type="checkbox" />
         <label htmlFor="toggle-all">Mark all as complete</label>
         <ul className="todo-list">
-          {todos.map((todo) => (
+          {filteredTodos.map((todo) => (
             <Todo todos={todos} setTodos={setTodos} todo={todo} key={todo.id} />
           ))}
         </ul>
       </section>
 
-      <Footer />
+      <Footer
+        todos={todos}
+        setTodos={setTodos}
+        status={status}
+        setStatus={setStatus}
+      />
     </section>
   );
 }
