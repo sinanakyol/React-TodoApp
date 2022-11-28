@@ -2,22 +2,23 @@ import { useState } from "react";
 import { useEffect } from "react";
 import Form from "./form";
 import Todo from "./todo";
+import Footer from "./footer";
 
 function Todos() {
   const [todos, setTodos] = useState([
     {
-      completed: true,
       text: "Learn JavaScript",
+      completed: true,
       id: 1,
     },
     {
-      completed: false,
       text: "Learn React",
+      completed: false,
       id: 2,
     },
     {
-      completed: false,
       text: "Have a life!",
+      completed: false,
       id: 3,
     },
   ]);
@@ -36,31 +37,14 @@ function Todos() {
       <section className="main">
         <input className="toggle-all" type="checkbox" />
         <label htmlFor="toggle-all">Mark all as complete</label>
-        <Todo todos={todos} setTodos={setTodos} />
+        <ul className="todo-list">
+          {todos.map((todo) => (
+            <Todo todos={todos} setTodos={setTodos} todo={todo} key={todo.id} />
+          ))}
+        </ul>
       </section>
 
-      <footer className="footer">
-        <span className="todo-count">
-          <strong>2</strong>
-          items left
-        </span>
-
-        <ul className="filters">
-          <li>
-            <a href="#/" className="selected">
-              All
-            </a>
-          </li>
-          <li>
-            <a href="#/">Active</a>
-          </li>
-          <li>
-            <a href="#/">Completed</a>
-          </li>
-        </ul>
-
-        <button className="clear-completed">Clear completed</button>
-      </footer>
+      <Footer />
     </section>
   );
 }
