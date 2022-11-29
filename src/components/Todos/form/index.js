@@ -9,7 +9,10 @@ function Form({ todos, setTodos }) {
 
   const onSubmit = (e) => {
     e.preventDefault();
-    if (inputText === "") return false;
+    if (inputText === "") {
+      alert("You can not add empty text");
+      return false;
+    }
 
     setTodos([
       ...todos,
